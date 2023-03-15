@@ -73,6 +73,13 @@ void* writer_thread(void* arg) {
     
     pthread_exit(NULL); /* Exit thread */
 }
+void relaxandspendtime() {
+    /* Simulate some work */
+    int i;
+    for (i = 0; i < 100000000; i++) {
+        /* Do nothing */
+    }
+}
 
 /* Main function */
 int main(int argc, char *argv[])
