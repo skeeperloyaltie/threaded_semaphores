@@ -3,8 +3,9 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <stdint.h>   // Add this line to include intptr_t type
+#include <unistd.h>   // Add this line to include sleep function
 
-#define MAX_READERS 40
+#define MAX_READERS 10
 
 int shared_resource = 0;
 sem_t mutex, writeblock;
@@ -68,13 +69,26 @@ int main(int argc, char **argv) {
 
     // Use intptr_t instead of int in the loop variable
     for (intptr_t i = 0; i < numOfReaders; i++) {
-        pthread_create(&readers[i], &attr[0], reader_thread, (void*) i);
+        int rc = pthread_create(&readers[i], &attr[0], reader_thread, (void*) i);
+        if (rc) {
+            printf("Error: return code from pthread_create() is %d\n", rc);
+            exit(1);
+        }
     }
-    for (intptr_t i = 0; i < numOfWriters; i++) {
-        pthread_create(&writers[i], &attr[0], writer_thread, (void*) i);
+    for (intptr_t j = 0; j < numOfWriters; j++) {
+        int rc = pthread_create(&writers[j], &attr[0], writer_thread, (void*) j);
+        if (rc) {
+            printf("Error: return code from pthread_create() is %d\n", rc);
+            exit(1);
+        }
     }
 
-    pthread_join(writers[0], NULL);
+    for (int i = 0; i < numOfReaders; i++) {
+        pthread_join(readers[i], NULL);
+    }
+    for (int j = 0; j < numOfWriters; j++) {
+        pthread_join(writers[j], NULL);
+    }
 
     sem_destroy(&mutex);
     sem_destroy(&writeblock);
