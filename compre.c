@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
         pthread_join(readers[i], NULL);
     }
     pthread_join(writer, NULL);
-
+    printf("Writer finished\n");
     // Destroy semaphores
     sem_destroy(&mutex);
     sem_destroy(&wrt);
@@ -90,7 +90,8 @@ void *reader_thread(void *arg)
         last_read_value = sharedCounter;
         sharedCounter++;
     }
-    printf("Reader %d finished, last read value = %d\n", thread_id, last_read_value);
+    printf("Reader %d finished\n", thread_id);
+    
 
     // Exit section
     sem_post(&wrt);
@@ -111,8 +112,9 @@ void *writer_thread(void *arg)
     {
         last_read_value = sharedCounter;
         sharedCounter++;
+        
     }
-    printf("Writer finished, last read value = %d\n", last_read_value);
+    
 
     // Exit section
     in_cs = 0;
