@@ -1,6 +1,3 @@
-// Student Name: Hafsa Banu
-// Admission: A20423264
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -43,8 +40,6 @@ void *reader_thread(void *arg)
             sem_post(&writeblock);
         }
         sem_post(&mutex);
-
-        sleep(1);
     }
 }
 
@@ -59,8 +54,6 @@ void *writer_thread(void *arg)
         sem_post(&writeblock);
 
         relaxandspendtime(); // Add this line
-
-        sleep(1);
     }
 }
 
