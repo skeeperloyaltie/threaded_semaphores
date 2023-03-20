@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -30,7 +31,6 @@ void *reader_thread(void *arg)
         }
         sem_post(&mutex);
 
-        printf("Reader %ld: Done %d, last read value = %d\n", thread_id, count, shared_resource);
         count++;
 
         relaxandspendtime(); // Add this line
@@ -43,6 +43,7 @@ void *reader_thread(void *arg)
         }
         sem_post(&mutex);
     }
+    printf("Reader %ld: Done 25M, last read value = %d\n", thread_id, shared_resource);
 }
 
 void *writer_thread(void *arg)
@@ -53,12 +54,12 @@ void *writer_thread(void *arg)
     {
         sem_wait(&writeblock);
         shared_resource++;
-        printf("Writer %ld: Done %d, last read value %d\n", thread_id, count, shared_resource);
         count++;
         sem_post(&writeblock);
 
         relaxandspendtime(); // Add this line
     }
+    printf("Writer  Done %ld:M, last read value %d\n", thread_id, shared_resource);
 }
 
 int main(int argc, char **argv)
